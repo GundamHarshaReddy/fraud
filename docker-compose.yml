@@ -1,0 +1,79 @@
+services:
+  # Redis for graph store and caching
+  redis:
+    image: redis:7-alpine
+    container_name: fraud-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Redpanda for streaming
+  redpanda:
+    image: redpandadata/redpanda:latest
+    container_name: fraud-redpanda
+    ports:
+      - "9092:9092"
+      - "9644:9644"
+    command:
+      - redpanda start
+      - --mode dev-container
+      - --smp 1
+      - --memory 512M
+      - --reserve-memory 0M
+      - --kafka-addr internal://0.0.0.0:29092,external://0.0.0.0:9092
+      - --advertise-kafka-addr internal://redpanda:29092,external://localhost:9092
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: fraud-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:29092
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      redis:
+        condition: service_healthy
+      redpanda:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app/backend
+      - ./models:/app/models
+      - ./data:/app/data
+    command: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend (nginx for serving static files)
+  frontend:
+    image: nginx:alpine
+    container_name: fraud-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+
+volumes:
+  redis_data:
+
+networks:
+  default:
+    name: fraud-detection-network

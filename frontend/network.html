@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Fraud Network Topology | Real-Time GNN Constellation</title>
+    <link rel="stylesheet" href="network.css">
+    <!-- Three.js, D3, and 3D Force Graph WebGL Engine -->
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>
+    <script src="https://unpkg.com/3d-force-graph@1.73.3/dist/3d-force-graph.min.js"></script>
+</head>
+<body class="network-body">
+    <!-- Header with Cross-Page Navigation -->
+    <header class="network-header">
+        <div class="header-brand">
+            <h1>🌐 FraudGuard 3D</h1>
+            <span class="brand-badge">Real-Time Mesh Topology</span>
+        </div>
+
+        <nav class="nav-links">
+            <a href="index.html" class="nav-link">📊 Operations Dashboard</a>
+            <a href="network.html" class="nav-link active">🌐 3D Fraud Network <span class="nav-badge">LIVE 3D</span></a>
+        </nav>
+
+        <div class="status-indicator">
+            <span class="status-dot" id="wsStatusDot"></span>
+            <span id="wsStatusText">Connecting to Stream...</span>
+        </div>
+    </header>
+
+    <!-- Main 3D Viewport -->
+    <main class="network-viewport">
+        <!-- 3D Canvas Mount Point -->
+        <div id="graph-3d-container"></div>
+
+        <!-- HUD: Live Stats -->
+        <div class="hud-stats">
+            <div class="stats-card-group">
+                <div class="stat-pill">
+                    <div class="icon">👥</div>
+                    <div class="data">
+                        <span class="value" id="statNodeCount">0</span>
+                        <span class="label">Live Entities</span>
+                    </div>
+                </div>
+                <div class="stat-pill">
+                    <div class="icon">🔗</div>
+                    <div class="data">
+                        <span class="value" id="statLinkCount">0</span>
+                        <span class="label">Mesh Edges</span>
+                    </div>
+                </div>
+                <div class="stat-pill alert">
+                    <div class="icon">🚨</div>
+                    <div class="data">
+                        <span class="value" id="statHighRiskCount">0</span>
+                        <span class="label">High-Risk Alerts</span>
+                    </div>
+                </div>
+                <div class="stat-pill">
+                    <div class="icon">⚡</div>
+                    <div class="data">
+                        <span class="value" id="statIngestRate">0 /s</span>
+                        <span class="label">Stream Velocity</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HUD: Interactive Toolbar Controls -->
+        <div class="hud-controls">
+            <div class="control-bar">
+                <input type="text" id="nodeSearch" class="search-input" placeholder="Search Txn, Card, Device ID...">
+                <button id="btnFilterAll" class="hud-btn active">All Nodes</button>
+                <button id="btnFilterHighRisk" class="hud-btn danger-btn">🚨 High Risk Only</button>
+                <button id="btnFilterRings" class="hud-btn">🕸️ Fraud Rings</button>
+            </div>
+            <div class="control-bar">
+                <button id="btnDemoFeed" class="hud-btn">🎮 Live Sim</button>
+                <button id="btnInjectBatch" class="hud-btn" title="Inject a batch of 20 realistic transactions atomically with smooth orbital physics">⚡ +20 Batch</button>
+                <button id="btnAutoRotate" class="hud-btn active">🔄 Auto-Orbit: ON</button>
+                <button id="btnAntiSpin" class="hud-btn active" title="Lock graph rotational axis and cancel physics spinning">🛑 Anti-Spin: ON</button>
+                <button id="btnLockLayout" class="hud-btn" title="Pin existing nodes in place so new streaming nodes don't shift the graph">📌 Lock Layout</button>
+                <button id="btnParticles" class="hud-btn active">✨ Link Lasers</button>
+                <div class="hud-slider-group" title="Adjust distance and space between entities">
+                    <span class="hud-slider-label">↔️ Spacing</span>
+                    <input type="range" id="sliderSpread" min="70" max="250" value="140" step="10" class="hud-slider">
+                    <span id="labelSpreadVal" class="hud-slider-val">1.4x</span>
+                </div>
+                <button id="btnResetCamera" class="hud-btn">🎯 Center</button>
+                <button id="btnClearGraph" class="hud-btn">🧹 Clear</button>
+            </div>
+        </div>
+
+        <!-- Dynamic Hover Inspector Card -->
+        <div id="hoverInspector" class="hover-inspector">
+            <div class="inspector-header">
+                <div class="inspector-title">
+                    <span id="hoverIcon">👤</span>
+                    <span id="hoverTitle">Txn #---</span>
+                </div>
+                <span id="hoverTypeTag" class="type-tag transaction">Transaction</span>
+            </div>
+            <div class="inspector-body">
+                <div class="inspector-row" id="hoverRiskRow">
+                    <span class="inspector-label">Risk Score</span>
+                    <span class="risk-pill low" id="hoverRiskValue">0.00</span>
+                </div>
+                <div class="inspector-row" id="hoverAmountRow">
+                    <span class="inspector-label">Amount</span>
+                    <span class="inspector-value" id="hoverAmountValue">$0.00</span>
+                </div>
+                <div class="inspector-row" id="hoverDetail1Row">
+                    <span class="inspector-label" id="hoverDetail1Label">Card</span>
+                    <span class="inspector-value" id="hoverDetail1Value">---</span>
+                </div>
+                <div class="inspector-row" id="hoverDetail2Row">
+                    <span class="inspector-label" id="hoverDetail2Label">Device</span>
+                    <span class="inspector-value" id="hoverDetail2Value">---</span>
+                </div>
+                <div class="inspector-row">
+                    <span class="inspector-label">Connections</span>
+                    <span class="inspector-value" id="hoverNeighborsCount">0 linked</span>
+                </div>
+            </div>
+            <div class="inspector-hint">Left-Click node to lock camera & inspect details</div>
+        </div>
+
+        <!-- Visual Legend Overlay -->
+        <div class="network-legend">
+            <div class="legend-title">Entity Visual Legend</div>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#38bdf8; color:#38bdf8;"></span>
+                    <span>User / Txn (Safe)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#ef4444; color:#ef4444;"></span>
+                    <span>Fraud Alert (≥0.80)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#f59e0b; color:#f59e0b;"></span>
+                    <span>Card / Ring Entity</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#a855f7; color:#a855f7;"></span>
+                    <span>Device Node</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#10b981; color:#10b981;"></span>
+                    <span>Email / Billing</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:rgba(56,189,248,0.7); color:#38bdf8;"></span>
+                    <span>Mesh Relationship</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Slide-Over Investigation Drawer -->
+    <aside id="detailDrawer" class="detail-drawer">
+        <div class="drawer-header">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <h2 id="drawerTitle" style="margin:0;">Entity Investigation</h2>
+                <span id="drawerBadge" class="type-tag transaction" style="margin:0;">TRANSACTION</span>
+            </div>
+            <button id="closeDrawerBtn" class="close-drawer-btn">&times;</button>
+        </div>
+        <div class="drawer-content" id="drawerContent">
+            <!-- Populated dynamically by network.js -->
+        </div>
+    </aside>
+
+    <script src="network.js"></script>
+</body>
+</html>

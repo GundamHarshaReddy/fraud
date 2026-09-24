@@ -1,0 +1,7 @@
+{
+  "high_risk_threshold": 0.05,
+  "medium_risk_threshold": 0.3,
+  "model": "xgboost",
+  "recall_at_threshold": 0.960223537146614,
+  "cost_reduction_pct": 45.341551800047405
+}

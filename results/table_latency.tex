@@ -1,0 +1,15 @@
+\begin{table}[!t]
+\centering
+\caption{End-to-End Latency Benchmark (10,000 Simulated Transactions)}
+\label{tab:latency}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Pipeline Stage} & \textbf{Mean (ms)} & \textbf{P95 (ms)} & \textbf{Execution Context} \\
+\midrule
+\textbf{Stage 1: Redis + THA-GAT Scoring} & 18.2 & 22.0 & Synchronous (Blocking) \\
+Stage 2: GNNExplainer Attribution & 84.9 & 104.6 & Asynchronous (Offline) \\
+Stage 3: LLM SAR Generation & 2141.9 & 2880.6 & Asynchronous (Offline) \\
+Stage 4: Neuro-Symbolic Claim Verifier & 0.8 & 1.0 & Asynchronous (Offline) \\
+\bottomrule
+\end{tabular}
+\end{table}

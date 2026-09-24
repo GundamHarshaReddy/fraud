@@ -1,0 +1,34 @@
+[
+  {
+    "name": "THA-GAT (full)",
+    "auc_roc": 0.7797787076668752,
+    "auc_roc_std": 0.0012177390055286123,
+    "pr_auc": 0.16360944701791733,
+    "pr_auc_std": 0.006736588992095451,
+    "delta_auc": 0.0
+  },
+  {
+    "name": "\u2212 temporal attn \u2212 hetero attn \u2212 ring readout (GraphSAGE)",
+    "auc_roc": 0.7844380344386983,
+    "auc_roc_std": 0.001252519219748447,
+    "pr_auc": 0.18934037275284946,
+    "pr_auc_std": 0.006861010659263818,
+    "delta_auc": 0.004659326771823125
+  },
+  {
+    "name": "\u2212 temporal attn \u2212 hetero attn (standard GAT)",
+    "auc_roc": 0.8071425903524757,
+    "auc_roc_std": 0.002316033385308356,
+    "pr_auc": 0.25785147083481313,
+    "pr_auc_std": 0.007440697276184597,
+    "delta_auc": 0.027363882685600527
+  },
+  {
+    "name": "\u2212 graph structure entirely (MLP)",
+    "auc_roc": 0.7908345597098905,
+    "auc_roc_std": 0.0009831647648783927,
+    "pr_auc": 0.2097959138629741,
+    "pr_auc_std": 0.010293324672147379,
+    "delta_auc": 0.01105585204301529
+  }
+]

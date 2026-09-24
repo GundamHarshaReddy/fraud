@@ -1,0 +1,45 @@
+# Core Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+pyarrow>=12.0.0
+
+# Graph Processing
+networkx>=3.0
+scipy>=1.10.0
+
+# Machine Learning / Graph Neural Networks
+torch>=2.0.0
+torch-geometric>=2.3.0
+scikit-learn>=1.3.0
+
+# Traditional ML Baseline
+xgboost>=1.7.0
+
+# Streaming
+kafka-python>=2.0.0
+
+# Redis
+redis>=4.5.0
+
+# Backend API
+fastapi>=0.100.0
+uvicorn>=0.23.0
+websockets>=11.0.0
+pydantic>=2.0.0
+
+# GenAI
+google-generativeai>=0.3.0
+
+# Data Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.15.0
+
+# Utilities
+python-dotenv>=1.0.0
+tqdm>=4.65.0
+joblib>=1.3.0
+
+# Jupyter
+jupyter>=1.0.0
+ipykernel>=6.25.0

@@ -1,0 +1,12 @@
+{
+  "total_samples": 1000,
+  "without_verifier": {
+    "hallucinated_sars": 268,
+    "hallucination_rate": 0.268
+  },
+  "with_verifier": {
+    "hallucinated_sars": 10,
+    "hallucination_rate": 0.01,
+    "re_prompts_triggered": 268
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EvidenceObject",
+  "description": "Formal JSON Schema for GNNExplainer attribution data passed to the LLM for SAR generation.",
+  "type": "object",
+  "properties": {
+    "transaction_id": {
+      "type": "string",
+      "description": "The unique identifier of the flagged transaction."
+    },
+    "feature_attributions": {
+      "type": "array",
+      "description": "The top tabular features contributing to the fraud score.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "feature": {
+            "type": "string"
+          },
+          "importance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["increases_risk", "decreases_risk"]
+          }
+        },
+        "required": ["feature", "importance", "direction"]
+      }
+    },
+    "edge_importances": {
+      "type": "array",
+      "description": "The specific multi-hop relationships contributing to the fraud score.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "edge_type": {
+            "type": "string",
+            "enum": ["card", "device", "email", "address", "shared_device"]
+          },
+          "source_node": {
+            "type": "string"
+          },
+          "target_node": {
+            "type": "string"
+          },
+          "importance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": ["edge_type", "source_node", "target_node", "importance"]
+      }
+    },
+    "critical_subgraph": {
+      "type": "object",
+      "properties": {
+        "n_nodes": {
+          "type": "integer"
+        },
+        "n_edges": {
+          "type": "integer"
+        }
+      },
+      "required": ["n_nodes", "n_edges"]
+    }
+  },
+  "required": ["transaction_id", "feature_attributions", "edge_importances", "critical_subgraph"]
+}

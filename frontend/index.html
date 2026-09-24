@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>🔍 Real-Time Fraud Detection System</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link active">📊 Operations Dashboard</a>
+                <a href="network.html" class="nav-link">🌐 3D Fraud Network <span class="nav-badge">LIVE 3D</span></a>
+            </nav>
+            <div class="status-indicator">
+                <span class="status-dot" id="connectionStatus"></span>
+                <span id="connectionText">Connecting...</span>
+            </div>
+        </header>
+
+        <!-- Dashboard Stats -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Transactions</h3>
+                <div class="stat-value" id="totalTransactions">0</div>
+                <div class="stat-label">Processed</div>
+            </div>
+            <div class="stat-card">
+                <h3>Fraud Rate</h3>
+                <div class="stat-value" id="fraudRate">0%</div>
+                <div class="stat-label">Detection Rate</div>
+            </div>
+            <div class="stat-card alert-card">
+                <h3>High Risk Alerts</h3>
+                <div class="stat-value" id="highRiskCount">0</div>
+                <div class="stat-label">Pending Investigation</div>
+            </div>
+            <div class="stat-card genai-card">
+                <h3>GenAI Escalations</h3>
+                <div class="stat-value" id="genaiEscalations">0</div>
+                <div class="stat-label">AI-Generated Reports</div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Latency</h3>
+                <div class="stat-value" id="avgLatency">0ms</div>
+                <div class="stat-label">Processing Time</div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Live Transaction Feed -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>📡 Live Transaction Feed</h2>
+                    <div class="controls">
+                        <button id="btnDemoFeed" class="btn btn-primary">⚡ Stream Demo: OFF</button>
+                        <button id="btnInjectBatch" class="btn btn-primary">⚡ +10 Batch</button>
+                        <button id="pauseFeed" class="btn btn-secondary">Pause</button>
+                        <button id="clearFeed" class="btn btn-secondary">Clear</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Amount</th>
+                                <th>Card</th>
+                                <th>Device</th>
+                                <th>Risk Score</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionFeed">
+                            <!-- Transactions will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Alert Queue -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>🚨 High-Risk Alert Queue</h2>
+                    <div class="controls">
+                        <select id="alertFilter" class="filter-select">
+                            <option value="pending_investigation">Pending Investigation</option>
+                            <option value="confirmed_fraud">Confirmed Fraud</option>
+                            <option value="false_positive">False Positive</option>
+                        </select>
+                        <button id="refreshAlerts" class="btn btn-primary">Refresh</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Amount</th>
+                                <th>Risk Score</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alertQueue">
+                            <!-- Alerts will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Transaction Detail Modal -->
+        <div id="transactionModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Transaction Investigation</h2>
+                    <button class="close-btn" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Transaction details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

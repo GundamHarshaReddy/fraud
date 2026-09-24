@@ -1,0 +1,9 @@
+2026-09-22 19:54:24,806 - Loading existing predictions...
+2026-09-22 19:54:24,807 - Computing ensemble predictions (50/50 split)...
+2026-09-22 19:54:24,836 - --- Ensemble Results ---
+2026-09-22 19:54:24,836 - AUC: 0.8889
+2026-09-22 19:54:24,836 - PR-AUC: 0.4881
+2026-09-22 19:54:24,836 - F1: 0.3892
+2026-09-22 19:54:24,836 - Precision: 0.2814
+2026-09-22 19:54:24,836 - Recall: 0.6308
+2026-09-22 19:54:24,837 - Saved ensemble predictions to /Users/harshareddy/Downloads/fraud-detection-system/results/ensemble_predictions.npz
